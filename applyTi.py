@@ -54,7 +54,7 @@ def tradingview_stack(df, ticker):
     df['close_chngpct_24_diff_p'] = df['close_chngpct_24'].sub((df['close_chngpct_24_yday'].where(cond=df['close_chngpct_24_yday'].gt(0))))
     df['close_chngpct_24_diff_n'] = df['close_chngpct_24'].sub((df['close_chngpct_24_yday'].where(cond=df['close_chngpct_24_yday'].le(0))))
     df['close_chngpct_24_tmro'] = df['close_chngpct_24'].shift(-1)
-    df['close_chngpct_48_tmro'] = df['close_chngpct_24'].shift(-2)
+    df['close_chngpct_48_tmro'] = df['close_chngpct_24'].shift(-1)
     
     df['close_down3'] = 0
     df.loc[(df['close'] < df['close'].shift(1)) & (df['close'].shift(1) < df['close'].shift(2)), ['close_down3']] = 1
@@ -72,12 +72,12 @@ def tradingview_stack(df, ticker):
     df['close_1mo_low'] = df['close'].rolling(window=20).min()
     df['close_1mo_high'] = df['close'].rolling(window=20).max()
     df['close_div_1mo_low'] = df['close'].div(df['close_1mo_low'])
-    df['high_1mo_div_close'] = df['close_1mo_high'].div(df['close_1mo_low'])
+    df['high_1mo_div_close'] = df['close_1mo_high'].div(df['close'])
 
     df['perf_1mo_sub_p1wk'] = df['perf_1mo'].sub((df['perf_1wk'].where(cond=df['perf_1wk'].gt(0))))
     df['perf_1mo_sub_n1wk'] = df['perf_1mo'].sub((df['perf_1wk'].where(cond=df['perf_1wk'].le(0))))
 
-    df['perf_3mo'] = df['close'].replace(to_replace=0, value=0.001).pct_change(periods=60).mul(100)
+    
     df['close_3mo_low'] = df['close'].rolling(window=60).min()
     df['close_3mo_high'] = df['close'].rolling(window=60).max()
 
